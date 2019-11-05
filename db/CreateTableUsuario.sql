@@ -13,7 +13,8 @@ CREATE TABLE [dbo].[Usuario](
 	[Id] INT NOT NULL IDENTITY,
 	[Nome] [nchar](256) NOT NULL,
 	[EMail] [nchar](255) NOT NULL,
-	[SenhaHash] [nchar](42) NOT NULL ,
+	[SenhaHash] [nchar](42) NOT NULL,
+	[DataCriacao] [datetime] NULL DEFAULT GETDATE(),
  CONSTRAINT [PK_Usuario_Id] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

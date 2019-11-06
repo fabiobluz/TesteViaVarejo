@@ -55,14 +55,19 @@ namespace TesteViaVarejo.Domain.Servicos
             _repositorio.Dispose();
         }
 
-        public T Procura(Func<T, bool> predicate, out string erro)
+        public T Procurar(Func<T, bool> predicate, out string erro)
         {
-            return _repositorio.Procura(predicate, out erro);
+            return _repositorio.Procurar(predicate, out erro);
         }
 
         public T ObterPorId(Int32 id)
         {
             return _repositorio.ObterPorId(id);
+        }
+
+        public void Excluir(Int32 id)
+        {
+            _repositorio.Excluir(id);
         }
 
     }

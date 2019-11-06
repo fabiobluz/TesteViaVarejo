@@ -26,7 +26,7 @@ namespace TesteViaVarejo.Infra.Data.Repositorios
         }
         public IEnumerable<T> ObterTodos()
         {
-            return Db.Set<T>();
+            return DbSet.AsEnumerable();
         }
         public void Atualizar(T obj)
         {
@@ -37,7 +37,7 @@ namespace TesteViaVarejo.Infra.Data.Repositorios
         {
             Db.Dispose();
         }
-        public T Procura(Func<T, bool> predicate, out String erro)
+        public T Procurar(Func<T, bool> predicate, out String erro)
         {
             try
             {
@@ -62,6 +62,11 @@ namespace TesteViaVarejo.Infra.Data.Repositorios
         public T ObterPorId(Int32 id)
         {
             return DbSet.Find(id);
+        }
+
+        public void Excluir(Int32 id) {
+            DbSet.Remove(DbSet.Find(id));
+            Db.SaveChanges();
         }
     }
 }

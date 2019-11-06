@@ -22,12 +22,36 @@ namespace TesteViaVarejo.Domain.Servicos
         public Usuario EfetuarLogin(Usuario usuario)
         {
             var usDB = this._iUsuarioRepositorio.ObterTodos().FirstOrDefault(x => x.EMail == usuario.EMail);
-            if (VerificarUsuario(usuario.SenhaHash, usDB))
-                return usuario;
-            else
-                return null;
+            if (usDB != null)
+            {
+                if (VerificarUsuario(usuario.SenhaHash, usDB))
+                    return usDB;
+            }
+            return null;
         }
 
+        public List<Usuario> Obter()
+        {
+            return _iUsuarioRepositorio.ObterTodos().ToList();
+        }
+
+        public Usuario NovoUsuario(Usuario usuario)
+        {
+            usuario.SenhaHash = HashSHA1String(usuario.SenhaHash, usuario.Nome);
+            _iUsuarioRepositorio.Adicionar(usuario);
+            return _iUsuarioRepositorio.ObterPorId(usuario.Id);
+        }
+        public void AtualizarUsuario(Usuario usuario)
+        {
+            var usuarioBD = ObterPorId(usuario.Id);
+            
+            usuarioBD.SenhaHash = HashSHA1String(usuario.SenhaHash, usuario.Nome);
+            usuarioBD.Nome = usuario.Nome;
+            usuarioBD.EMail = usuario.EMail;
+
+            _iUsuarioRepositorio.Atualizar(usuarioBD);
+        }
+        
 
         #region Private Methods
         private bool VerificarUsuario(string senhaDig, Usuario usuario)

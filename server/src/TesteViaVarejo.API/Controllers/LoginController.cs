@@ -15,6 +15,8 @@ using TesteViaVarejo.Domain.Interfaces.Servicos;
 
 namespace TesteViaVarejo.API.Controllers
 {
+    [AllowAnonymous]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
@@ -27,11 +29,12 @@ namespace TesteViaVarejo.API.Controllers
             _iUsuarioServico = usuarioServico;
         }
 
-        [AllowAnonymous]
+        
         [HttpPost]
-        public Usuario Post([FromBody] Usuario usuario)
+        public object Post([FromBody] Usuario usuario)
         {
-            return this._iUsuarioServico.EfetuarLogin(usuario);
+            var retorno = this._iUsuarioServico.EfetuarLogin(usuario);
+            return Ok(retorno);
         }
         
     }

@@ -2,14 +2,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Principal;
-using System.Text;
+using System.Linq;
 using TesteViaVarejo.Domain.Entidades;
 using TesteViaVarejo.Domain.Entidades.ValuesObjects;
 using TesteViaVarejo.Domain.Interfaces.Servicos;
+
 
 namespace TesteViaVarejo.API.Controllers
 {
@@ -20,19 +22,22 @@ namespace TesteViaVarejo.API.Controllers
         private readonly IUsuarioAcessoServico _iUsuarioAcessoServico;
         private readonly SigningConfigurations _signingConfigurations;
         private readonly TokenConfig _tokenConfig;
+        //private readonly IServicoBase<Usuario> _iUsuarioServico;
+        private readonly IUsuarioServico _iUsuarioServico;
 
-        public UsuarioController(IUsuarioAcessoServico usuarioAcessoServico, SigningConfigurations signingConfigurations, TokenConfig tokenConfig)
+        public UsuarioController(IUsuarioAcessoServico usuarioAcessoServico, SigningConfigurations signingConfigurations, TokenConfig tokenConfig, IUsuarioServico usuarioServico)
         {
             _iUsuarioAcessoServico = usuarioAcessoServico;
             _signingConfigurations = signingConfigurations;
             _tokenConfig = tokenConfig;
+            _iUsuarioServico = usuarioServico;
         }
 
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("Login/{usuario}/{chaveAcesso}")]
-        public object Login(string usuario, string chaveAcesso)
+        [Route("Token/{usuario}/{chaveAcesso}")]
+        public object Token(string usuario, string chaveAcesso)
         {
 
             UsuarioAcesso usuarioBase = null;
@@ -87,6 +92,37 @@ namespace TesteViaVarejo.API.Controllers
                     message = "Falha ao autenticar"
                 };
             }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public object Get()
+        {
+            var retorno = this._iUsuarioServico.Obter();
+            return Ok(retorno);
+        }
+
+        [AllowAnonymous]
+        [HttpPatch]
+        public void Patch([FromBody] Usuario usuario)
+        {
+            this._iUsuarioServico.AtualizarUsuario(usuario);
+        }
+
+
+        [AllowAnonymous]
+        [HttpPut]
+        public object Put([FromBody] Usuario usuario)
+        {
+            var retorno = this._iUsuarioServico.NovoUsuario(usuario);
+            return Ok(retorno);
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            _iUsuarioServico.Excluir(id);
         }
 
     }

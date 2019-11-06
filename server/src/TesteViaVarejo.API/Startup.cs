@@ -41,6 +41,8 @@ namespace TesteViaVarejo.API
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -55,6 +57,15 @@ namespace TesteViaVarejo.API
 
             services.AddDbContext<Contexto>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:64615");
+                });
+            });
 
             services.AddAuthentication(authOptions =>
             {
@@ -115,6 +126,9 @@ namespace TesteViaVarejo.API
             services.AddTransient<IUsuarioAcessoServico, UsuarioAcessoServico>();
             services.AddTransient<IAmigoServico, AmigoServico>();
             services.AddTransient<IUsuarioAcessoRepositorio, UsuarioAcessoRepositorio>();
+            services.AddTransient<IServicoBase<Usuario>, ServicoBase<Usuario>>();
+            services.AddTransient<IUsuarioServico, UsuarioServico>();
+            services.AddTransient<IRepositorioBase<Usuario>, RepositorioBase<Usuario>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,7 +150,7 @@ namespace TesteViaVarejo.API
                 c.SwaggerEndpoint("/TesteViaVarejo.API/swagger/v1/swagger.json", "Teste Via Varejo API V1 Docs");
             });
 
-
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

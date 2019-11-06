@@ -19,6 +19,7 @@ namespace TesteViaVarejo.Infra.Data.Config
         public DbSet<Amigo> Amigo { get; set; }
         public DbSet<CalculoHistoricoLog> CalculoHistoricoLog { get; set; }
         public DbSet<UsuarioAcesso> UsuarioAcesso { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
         #endregion Properties
 
         #region Protected Methods

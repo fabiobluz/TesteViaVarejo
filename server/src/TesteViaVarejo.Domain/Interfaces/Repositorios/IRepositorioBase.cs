@@ -14,7 +14,8 @@ namespace TesteViaVarejo.Domain.Interfaces.Repositorios
         IQueryable<T> ListaPor(Expression<Func<T, bool>> filter);
         bool Existe(Expression<Func<T, bool>> predicate);
         void Dispose();
-        T Procura(Func<T, bool> predicate, out String erro);
+        T Procurar(Func<T, bool> predicate, out String erro);
         T ObterPorId(Int32 id);
+        void Excluir(Int32 id);
     }
 }
